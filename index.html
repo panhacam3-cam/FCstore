@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Premium Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-bg: #f5f5f5;
+        --secondary-bg: #ffffff;
+        --card-bg: #ffffff;
+        --accent-color: #0066ff;
+        --accent-gradient: linear-gradient(135deg, #0066ff 0%, #4d94ff 100%);
+        --text-primary: #1a1a1a;
+        --text-secondary: #666666;
+        --text-muted: #999999;
+        --success-color: #00b725;
+        --warning-color: #dc2626;
+        --border-color: #e0e0e0;
+        --hover-bg: #f0f7ff;
+    }
+
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--primary-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #999;
+    }
+
+    /* Navigation */
+    nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 0;
+        width: 100%;
+    }
+
+    .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Animated Logo Styles */
+    .logo {
+        position: relative;
+        text-align: center;
+    }
+
+    .premium-text {
+        font-size: 2rem;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -2px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .premium-text .white {
+        color: #0066ff;
+        text-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+    }
+
+    .premium-text .blue {
+        color: #0066ff;
+        text-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
+        background: linear-gradient(to right, #0066ff, #4d94ff, #0066ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% auto;
+        animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+        to { background-position: 200% center; }
+    }
+
+    /* Service Icons Animation */
+    .service-icon {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        animation: icon-float 3s ease-in-out infinite;
+    }
+
+    .service-icon i {
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    }
+
+    .service-icon.spotify {
+        background: linear-gradient(145deg, #1db954, #1ed760);
+        top: -10px;
+        left: -35px;
+        animation-delay: 0s;
+    }
+
+    .service-icon.netflix {
+        background: linear-gradient(145deg, #e50914, #b20710);
+        top: 5px;
+        right: -30px;
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+        animation-delay: 1s;
+    }
+
+    .service-icon.discord {
+        background: linear-gradient(145deg, #5865F2, #4752C4);
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 26px;
+        height: 26px;
+        font-size: 13px;
+        animation-delay: 2s;
+    }
+
+    @keyframes icon-float {
+        0%, 100% { 
+            transform: translateY(0) scale(1); 
+        }
+        50% { 
+            transform: translateY(-6px) scale(1.05); 
+        }
+    }
+
+    /* Sparkle effects */
+    .sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #0066ff;
+        border-radius: 50%;
+        opacity: 0;
+        animation: sparkle 2s ease-in-out infinite;
+    }
+
+    .sparkle-1 { top: -5px; left: 20%; animation-delay: 0.5s; }
+    .sparkle-2 { top: 50%; right: -10%; animation-delay: 1s; }
+    .sparkle-3 { bottom: 0; left: 30%; animation-delay: 1.5s; }
+
+    @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0); }
+        50% { opacity: 1; transform: scale(1); }
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+    }
+
+    .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+        position: relative;
+    }
+
+    .nav-links a:hover {
+        color: var(--accent-color);
+    }
+
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--accent-gradient);
+        transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #0066ff 0%, #0044cc 50%, #002288 100%);
+        padding: 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        margin: 1rem;
+        border-radius: 20px;
+    }
+
+    .hero-banner-image {
+        width: 100%;
+        height: 200px;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .hero p {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    /* Social Links */
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.2);
+        padding: 0.7rem 1.2rem;
+        border-radius: 25px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .social-link:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Search Bar */
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        padding-left: 3rem;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+    }
+
+    .search-bar input::placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+
+    .search-bar input:focus {
+        background: rgba(255,255,255,0.25);
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .search-bar i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255,255,255,0.7);
+    }
+
+    /* Section Headers */
+    .section-header {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem 1rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    /* Animated Fire Icon */
+    .fire-icon {
+        color: #ff6b35;
+        animation: flame-flicker 1.5s ease-in-out infinite alternate;
+        filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6));
+        transform-origin: center bottom;
+    }
+
+    @keyframes flame-flicker {
+        0% {
+            transform: scale(1) rotate(-2deg);
+            filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6)) brightness(1);
+        }
+        25% {
+            transform: scale(1.05) rotate(1deg);
+            filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.8)) brightness(1.1);
+        }
+        50% {
+            transform: scale(0.95) rotate(-1deg);
+            filter: drop-shadow(0 0 6px rgba(255, 107, 53, 0.5)) brightness(0.95);
+        }
+        75% {
+            transform: scale(1.08) rotate(2deg);
+            filter: drop-shadow(0 0 14px rgba(255, 107, 53, 0.9)) brightness(1.15);
+        }
+        100% {
+            transform: scale(1) rotate(0deg);
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.7)) brightness(1.05);
+        }
+    }
+
+    /* Category Filter */
+    .category-filter {
+        max-width: 1400px;
+        margin: 0 auto 2rem;
+        padding: 0 2rem;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1.2rem;
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: var(--accent-color);
+        color: #ffffff;
+        border-color: var(--accent-color);
+    }
+
+    /* Product Grid */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem 4rem;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+    }
+
+    /* Product Card */
+    .product-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    /* HOT Badge */
+    .hot-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: var(--warning-color);
+        color: #ffffff;
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        animation: pulse 2s infinite;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.85; }
+    }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .product-content {
+        padding: 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-category {
+        color: var(--accent-color);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+
+    .product-description {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .price-container {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+    }
+
+    .current-price {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--success-color);
+    }
+
+    .original-price {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        text-decoration: line-through;
+    }
+
+    .stock-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .stock-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success-color);
+        border-radius: 50%;
+        animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    .delivery-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(0, 183, 37, 0.1);
+        color: var(--success-color);
+        padding: 0.35rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        width: fit-content;
+    }
+
+    /* Buy Now Button */
+    .buy-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: var(--accent-gradient);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .buy-btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+    }
+
+    .buy-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Footer - Stacked Layout */
+    footer {
+        background: #1a1a1a;
+        padding: 3rem 0 1.5rem;
+        margin-top: 2rem;
+        width: 100%;
+    }
+
+    .footer-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        text-align: center;
+    }
+
+    .footer-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .footer-section p {
+        color: #aaaaaa;
+        line-height: 1.7;
+        font-size: 0.9rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-section a {
+        color: #aaaaaa;
+        text-decoration: none;
+        transition: color 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .footer-section a:hover {
+        color: #ffffff;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    .social-icons a {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .social-icons .discord {
+        background: #5865F2;
+        color: white;
+    }
+
+    .social-icons .discord:hover {
+        background: #4752C4;
+        transform: translateY(-3px);
+    }
+
+    .social-icons .telegram {
+        background: #0088cc;
+        color: white;
+    }
+
+    .social-icons .telegram:hover {
+        background: #0077b3;
+        transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+        max-width: 1400px;
+        margin: 2rem auto 0;
+        padding: 1.5rem 2rem 0;
+        text-align: center;
+        border-top: 1px solid #333;
+        color: #777;
+        font-size: 0.85rem;
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .payment-badge {
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .payment-khqr {
+        background: #dc2626;
+        color: white;
+    }
+
+    .payment-aba {
+        background: #00217d;
+        color: white;
+    }
+
+    /* Loading Animation */
+    .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+        padding: 1rem;
+    }
+
+    .modal-content {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+
+    .modal-content h3 {
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+        font-size: 1.3rem;
+    }
+
+    .modal-content p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+
+    .contact-btn {
+        background: var(--accent-gradient);
+        color: #ffffff;
+        border: none;
+        padding: 0.9rem 2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .contact-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+        
+        .mobile-menu-toggle {
+            display: block;
+        }
+        
+        .hero {
+            margin: 0.5rem;
+            border-radius: 15px;
+        }
+
+        .hero-banner-image {
+            height: 150px;
+        }
+
+        .hero-content {
+            padding: 1.5rem 1rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+        
+        .social-links {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-link {
+            width: 100%;
+            max-width: 280px;
+            justify-content: center;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+        }
+        
+        .category-filter {
+            padding: 0 1rem;
+            justify-content: center;
+        }
+
+        .container {
+            padding: 0 1rem 3rem;
+        }
+        
+        .product-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .product-image {
+            height: 180px;
+        }
+
+        .footer-content {
+            padding: 0 1rem;
+            gap: 2rem;
+        }
+
+        .nav-container {
+            padding: 0 1rem;
+        }
+        
+        .footer-bottom {
+            padding: 1.5rem 1rem 0;
+        }
+
+        .premium-text {
+            font-size: 1.5rem;
+        }
+
+        .service-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .service-icon.spotify {
+            left: -25px;
+        }
+
+        .service-icon.netflix {
+            right: -20px;
+            width: 22px;
+            height: 22px;
+            font-size: 11px;
+        }
+
+        .service-icon.discord {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            bottom: -28px;
+        }
+    }
+</style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="nav-container">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Animated Logo with Service Icons -->
+        <div class="logo">
+            <div class="premium-text">
+                <span class="white">FC</span>
+                <span class="blue">Premium</span>
+            </div>
+            <!-- Service Icons -->
+            <div class="service-icon spotify">
+                <i class="fab fa-spotify"></i>
+            </div>
+            <div class="service-icon netflix">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="service-icon discord">
+                <i class="fab fa-discord"></i>
+            </div>
+            <!-- Sparkles -->
+            <div class="sparkle sparkle-1"></div>
+            <div class="sparkle sparkle-2"></div>
+            <div class="sparkle sparkle-3"></div>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#support">Support</a></li>
+        </ul>
+        <div style="width: 40px;"></div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <img src="https://i.ibb.co/5JkRn2z/fc-banner.jpg" alt="FC Premium Banner" class="hero-banner-image">
+    
+    <div class="hero-content">
+        <p>Discover Premium apps, Great Prices, Full Function with Best Service.</p>
+        
+        <div class="social-links">
+            <a href="https://t.me/nha_cam" target="_blank" class="social-link">
+                <i class="fab fa-telegram"></i>
+                @fcpremium
+            </a>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search for products..." id="searchInput">
+        </div>
+    </div>
+</section>
+
+<!-- Category Filter -->
+<div class="category-filter">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="subscription">Subscription</button>
+    <button class="filter-btn" data-filter="ai">AI</button>
+    <button class="filter-btn" data-filter="design">Design</button>
+</div>
+
+<!-- Hot Products Section -->
+<div class="section-header" id="products">
+    <h2 class="section-title">
+        <span class="fire-icon"><i class="fas fa-fire"></i></span>
+        Popular Products
+    </h2>
+</div>
+
+<div class="container">
+    <div class="product-grid">
+        <!-- CapCut -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg" alt="Capcut" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / 1 Month</div>
+                <h3 class="product-title">CapCut Pro</h3>
+                <p class="product-description">Capcut Pro / No ads / VIP / All functions unlocked</p>
+                
+                <div class="product-meta"> 
+                    <div class="price-container">
+                        <span class="current-price">$2.50</span>
+                        <span class="original-price">$5.00</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant Delivery
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="CapCut-Pro" data-price="$2.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Netflix -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg" alt="Netflix" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 1 Month</div>
+                <h3 class="product-title">Netflix Premium</h3>
+                <p class="product-description">No ads / 4K Ultra HD streaming / Multiple screens / Watch on any device</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$3.50</span>
+                        <span class="original-price">$5.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Netflix-Premium" data-price="$3.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- YouTube -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg" alt="YouTube" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 1 Month</div>
+                <h3 class="product-title">YouTube Premium</h3>
+                <p class="product-description">No ads / HD | 4K / Background play / YouTube Music included</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$2.50</span>
+                        <span class="original-price">$4.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="YouTube-Premium" data-price="$2.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Alight Motion -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/N6J3XKPR/alight.jpg" alt="Alight Motion" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / 1 Year</div>
+                <h3 class="product-title">Alight Motion</h3>
+                <p class="product-description">VIP / No Watermark / No ads / Full options / Export in 4K</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$3.75</span>
+                        <span class="original-price">$5.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Alight-Motion-Premium" data-price="$3.75">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Canva -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/20J2GRgD/canva.jpg" alt="Canva" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / Life-time</div>
+                <h3 class="product-title">Canva Pro</h3>
+                <p class="product-description">VIP / Unlocked full functions / Premium templates / Brand kit</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$3.50</span>
+                        <span class="original-price">$5.99</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Canva-Pro" data-price="$3.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- PicsArt -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Pz9RF14d/picsart.jpg" alt="PicsArt" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / 1 Month</div>
+                <h3 class="product-title">PicsArt Gold</h3>
+                <p class="product-description">Email & Password login / All premium features / No watermark</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$2.00</span>
+                        <span class="original-price">$3.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="PicsArt-Gold" data-price="$2.00">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Spotify -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/21SQdLHx/spotify.jpg" alt="Spotify" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 3 Months</div>
+                <h3 class="product-title">Spotify Premium</h3>
+                <p class="product-description">No ads / Offline downloads / High quality audio / Unlimited skips</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$4.50</span>
+                        <span class="original-price">$7.00</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Spotify-Premium" data-price="$4.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Discord Nitro (Moved from Best Seller to here to avoid duplicate) -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg" alt="Discord Nitro" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 3 Months</div>
+                <h3 class="product-title">Discord Nitro</h3>
+                <p class="product-description">Nitro gift link / Custom emojis everywhere / HD video / Server boosts</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$4.75</span>
+                        <span class="original-price">$8.99</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Discord-Nitro" data-price="$4.75">Buy Now</button>
+            </div>
+        </div>
+        
+        <!-- Gemini -->
+        <div class="product-card" data-category="ai">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/xtvmpPNt/gemini.jpg" alt="Gemini" class="product-image">
+            <div class="product-content">
+                <div class="product-category">AI / 1 Year</div>
+                <h3 class="product-title">Gemini Advanced</h3>
+                <p class="product-description">Gmail + Password included / 2TB Google storage / Gemini 1.5 Pro access</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$9.50</span>
+                        <span class="original-price">$14.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Gemini-Advanced" data-price="$9.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Grok AI -->
+        <div class="product-card" data-category="ai">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/WWqQjfC4/grok.jpg" alt="Grok AI" class="product-image">
+            <div class="product-content">
+                <div class="product-category">AI / 1 Week</div>
+                <h3 class="product-title">Grok AI Premium</h3>
+                <p class="product-description">X Premium account included / Real-time data access / Image generation</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$1.75</span>
+                        <span class="original-price">$2.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Grok-AI-Premium" data-price="$1.75">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- ChatGPT (Moved inside container) -->
+        <div class="product-card" data-category="ai">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/xKZ0hf7P/chatgpt.jpg" alt="ChatGPT" class="product-image">
+            <div class="product-content">
+                <div class="product-category">AI / 1 Year</div>
+                <h3 class="product-title">ChatGPT Plus</h3>
+                <p class="product-description">GPT-4 access / Faster response speed / Priority access / DALL-E image generation</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$5.50</span>
+                        <span class="original-price">$9.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="ChatGPT-Plus" data-price="$5.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Wink (Moved inside container) -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/67RWW7wN/wink.jpg" alt="Wink" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / 1 Week</div>
+                <h3 class="product-title">Wink Pro</h3>
+                <p class="product-description">Video retouching / AI beauty filters / No watermark / Unlimited exports</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$2.50</span>
+                        <span class="original-price">$5.99</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Wink-Pro" data-price="$2.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Surfshark (Moved inside container) -->
+        <div class="product-card" data-category="vpn">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/21JHNBCp/surfshark.jpg" alt="Surfshark" class="product-image">
+            <div class="product-content">
+                <div class="product-category">VPN / 3 Months</div>
+                <h3 class="product-title">Surfshark VPN</h3>
+                <p class="product-description">Unlimited devices / 3200+ servers worldwide / Ad blocker / No logs policy</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$4.50</span>
+                        <span class="original-price">$6.00</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Surfshark-VPN" data-price="$4.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- ExpressVPN (Moved inside container) -->
+        <div class="product-card" data-category="vpn">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Q7WpKyc1/express-VPN.jpg" alt="ExpressVPN" class="product-image">
+            <div class="product-content">
+                <div class="product-category">VPN / 1 Month</div>
+                <h3 class="product-title">ExpressVPN</h3>
+                <p class="product-description">Ultra-fast servers / 94 countries / 24/7 support / Kill switch included</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$2.75</span>
+                        <span class="original-price">$4.00</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="ExpressVPN" data-price="$2.75">Buy Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Best Seller Section -->
+<div class="section-header">
+    <h2 class="section-title">
+        <span class="fire-icon"><i class="fas fa-fire"></i></span>
+        Best Seller
+    </h2>
+</div>
+
+<div class="container">
+    <div class="product-grid">
+        <!-- CapCut (Featured in Best Seller) -->
+        <div class="product-card" data-category="design">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg  " alt="Capcut" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Design / 1 Month</div>
+                <h3 class="product-title">CapCut Pro</h3>
+                <p class="product-description">Capcut Pro / No ads / VIP / All functions unlocked</p>
+                
+                <div class="product-meta"> 
+                    <div class="price-container">
+                        <span class="current-price">$2.50</span>
+                        <span class="original-price">$5.00</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant Delivery
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="CapCut-Pro" data-price="$2.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- YouTube (Featured in Best Seller) -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg  " alt="YouTube" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 1 Month</div>
+                <h3 class="product-title">YouTube Premium</h3>
+                <p class="product-description">No ads / HD | 4K / Background play / YouTube Music included</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$2.50</span>
+                        <span class="original-price">$4.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="YouTube-Premium" data-price="$2.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Netflix (Featured in Best Seller) -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg  " alt="Netflix" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 1 Month</div>
+                <h3 class="product-title">Netflix Premium</h3>
+                <p class="product-description">No ads / 4K Ultra HD streaming / Multiple screens / Watch on any device</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$3.50</span>
+                        <span class="original-price">$5.50</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Netflix-Premium" data-price="$3.50">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Discord Nitro -->
+        <div class="product-card" data-category="subscription">
+            <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
+            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg  " alt="Discord Nitro" class="product-image">
+            <div class="product-content">
+                <div class="product-category">Subscription / 3 Months</div>
+                <h3 class="product-title">Discord Nitro</h3>
+                <p class="product-description">Nitro gift link / Custom emojis everywhere / HD video / Server boosts</p>
+                
+                <div class="product-meta">
+                    <div class="price-container">
+                        <span class="current-price">$4.75</span>
+                        <span class="original-price">$8.99</span>
+                    </div>
+                    <div class="delivery-badge">
+                        <i class="fas fa-bolt"></i> Instant
+                    </div>
+                </div>
+                
+                <button class="buy-btn" data-product="Discord-Nitro" data-price="$4.75">Buy Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer id="support">
+    <div class="footer-content">
+        <div class="footer-section about-section">
+            <h3>About FC Premium</h3>
+            <p>Your trusted source for digital subscriptions. We provide instant delivery of premium accounts and keys at affordable prices.</p>
+            <div class="social-icons">
+                <a href="https://discord.com/channels/@07s.xyz.com  " target="_blank" class="discord" title="Discord">
+                    <i class="fab fa-discord"></i>
+                </a>
+                <a href="https://t.me/nha_cam" target="_blank" class="telegram" title="Telegram">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer-section links-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section support-section">
+            <h3>Support</h3>
+            <ul>
+                <li><a href="https://t.me/nha_cam" target="_blank">Contact Us</a></li>
+                <li><a href="mailto:panhacam3@gmail.com">panhacam3@gmail.com.com</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section payment-section">
+            <h3>Payment Methods</h3>
+            <div class="payment-methods">
+                <span class="payment-badge payment-khqr">KHQR</span>
+                <span class="payment-badge payment-aba">ABA</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2026 FC Premium Store. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Purchase Modal -->
+<div class="modal" id="purchaseModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <i class="fas fa-shopping-cart" style="font-size: 3rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;"></i>
+        <h3>Proceed to Checkout</h3>
+        <p id="modalProductInfo">You are about to purchase this item.</p>
+        <a href="https://t.me/nha_cam" target="_blank" class="contact-btn" id="contactBtn">
+            <i class="fab fa-telegram"></i> Contact Us
+        </a>
+    </div>
+</div>
+
+<script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Buy button functionality
+    document.querySelectorAll('.buy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            const product = this.getAttribute('data-product');
+            const price = this.getAttribute('data-price');
+            
+            // Show processing state
+            this.innerHTML = '<span class="loading"></span> Processing...';
+            this.disabled = true;
+            
+            // Simulate processing then show modal
+            setTimeout(() => {
+                // Reset button
+                this.innerHTML = originalText;
+                this.disabled = false;
+                
+                // Show purchase modal
+                showModal(product, price);
+            }, 1500);
+        });
+    });
+
+    // Modal functions
+    function showModal(product, price) {
+        const modal = document.getElementById('purchaseModal');
+        const info = document.getElementById('modalProductInfo');
+        info.innerHTML = `You selected <strong style="color: var(--accent-color)">${product}</strong> for <strong style="color: var(--success-color)">${price}</strong>.<br><br>Contact us on Telegram to complete your purchase securely!`;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('purchaseModal').style.display = 'none';
+    }
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+        const modal = document.getElementById('purchaseModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const cards = document.querySelectorAll('.product-card');
+            
+            cards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                    card.style.display = 'flex';
+                    card.style.animation = 'fadeIn 0.4s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.product-card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.product-title').textContent.toLowerCase();
+            const category = card.querySelector('.product-category').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || category.includes(searchTerm)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Add fade in animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
