@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FC Premium Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -22,6 +22,12 @@
         --hover-bg: #f0f7ff;
     }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     html, body {
         width: 100%;
         overflow-x: hidden;
@@ -33,6 +39,7 @@
         background-color: var(--primary-bg);
         color: var(--text-primary);
         line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
     }
 
     /* Custom Scrollbar */
@@ -54,6 +61,7 @@
     nav {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid var(--border-color);
         position: sticky;
         top: 0;
@@ -69,12 +77,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
     }
 
     /* Animated Logo Styles */
     .logo {
         position: relative;
         text-align: center;
+        margin: 0 auto;
     }
 
     .premium-text {
@@ -163,6 +173,19 @@
         }
     }
 
+    .service-icon.discord {
+        animation: icon-float-discord 3s ease-in-out infinite;
+    }
+
+    @keyframes icon-float-discord {
+        0%, 100% { 
+            transform: translateX(-50%) translateY(0) scale(1); 
+        }
+        50% { 
+            transform: translateX(-50%) translateY(-6px) scale(1.05); 
+        }
+    }
+
     /* Sparkle effects */
     .sparkle {
         position: absolute;
@@ -187,6 +210,8 @@
         display: flex;
         gap: 2rem;
         list-style: none;
+        position: absolute;
+        right: 2rem;
     }
 
     .nav-links a {
@@ -223,9 +248,12 @@
         font-size: 1.5rem;
         color: var(--text-primary);
         cursor: pointer;
+        position: absolute;
+        left: 1rem;
+        z-index: 1001;
     }
 
-    /* Hero Section */
+    /* Hero Section - Fixed for all devices */
     .hero {
         background: linear-gradient(135deg, #0066ff 0%, #0044cc 50%, #002288 100%);
         padding: 0;
@@ -234,11 +262,17 @@
         overflow: hidden;
         margin: 1rem;
         border-radius: 20px;
+        width: calc(100% - 2rem);
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .hero-banner-image {
         width: 100%;
-        height: 200px;
+        height: auto;
+        max-height: 300px;
+        min-height: 150px;
         display: block;
         object-fit: cover;
         object-position: center;
@@ -249,7 +283,7 @@
         z-index: 1;
         max-width: 1000px;
         margin: 0 auto;
-        padding: 1.5rem;
+        padding: 2rem;
         box-sizing: border-box;
     }
 
@@ -281,6 +315,7 @@
         font-size: 0.9rem;
         transition: all 0.3s;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.3);
     }
 
@@ -308,6 +343,7 @@
         outline: none;
         transition: all 0.3s;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         box-sizing: border-box;
     }
 
@@ -328,7 +364,7 @@
         color: rgba(255,255,255,0.7);
     }
 
-    /* Section Headers */
+    /* Section Headers - Aligned Left */
     .section-header {
         max-width: 1400px;
         margin: 0 auto;
@@ -336,6 +372,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        text-align: left;
     }
 
     .section-title {
@@ -345,6 +382,7 @@
         align-items: center;
         gap: 0.5rem;
         color: var(--text-primary);
+        margin: 0;
     }
 
     /* Animated Fire Icon */
@@ -386,6 +424,7 @@
         display: flex;
         gap: 0.75rem;
         flex-wrap: wrap;
+        justify-content: flex-start;
     }
 
     .filter-btn {
@@ -750,7 +789,9 @@
         justify-content: center;
         align-items: center;
         backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         padding: 1rem;
+        box-sizing: border-box;
     }
 
     .modal-content {
@@ -762,6 +803,7 @@
         text-align: center;
         position: relative;
         animation: modalSlideIn 0.3s ease;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
 
     @keyframes modalSlideIn {
@@ -785,10 +827,17 @@
         color: var(--text-muted);
         cursor: pointer;
         transition: color 0.3s;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
     }
 
     .modal-close:hover {
         color: var(--text-primary);
+        background: var(--primary-bg);
     }
 
     .modal-content h3 {
@@ -823,29 +872,138 @@
         box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
     }
 
+    /* Order Summary in Modal */
+    .order-summary {
+        background: var(--primary-bg);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    .order-summary h4 {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .order-item-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .order-item-price {
+        font-weight: 700;
+        color: var(--success-color);
+    }
+
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 2px solid var(--accent-color);
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+
+    /* Mobile Navigation Overlay */
+    .mobile-nav-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    .mobile-nav-overlay.active {
+        display: block;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
         .product-grid {
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
+        
+        .hero-banner-image {
+            max-height: 250px;
+        }
     }
 
     @media (max-width: 768px) {
+        .nav-container {
+            padding: 0 1rem;
+            justify-content: center;
+        }
+        
         .nav-links {
             display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 998;
+            animation: slideDown 0.3s ease;
+            right: auto;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .nav-links.active {
+            display: flex;
         }
         
         .mobile-menu-toggle {
             display: block;
+            left: 1rem;
         }
         
         .hero {
             margin: 0.5rem;
             border-radius: 15px;
+            width: calc(100% - 1rem);
         }
 
         .hero-banner-image {
-            height: 150px;
+            max-height: 200px;
+            min-height: 120px;
         }
 
         .hero-content {
@@ -870,17 +1028,20 @@
         .section-header {
             flex-direction: column;
             gap: 1rem;
-            text-align: center;
+            text-align: left;
+            align-items: flex-start;
             padding: 2rem 1rem 1rem;
         }
 
         .section-title {
             font-size: 1.3rem;
+            justify-content: flex-start;
+            width: 100%;
         }
         
         .category-filter {
             padding: 0 1rem;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .container {
@@ -921,10 +1082,12 @@
 
         .service-icon.spotify {
             left: -25px;
+            top: -8px;
         }
 
         .service-icon.netflix {
             right: -20px;
+            top: 3px;
             width: 22px;
             height: 22px;
             font-size: 11px;
@@ -934,19 +1097,79 @@
             width: 20px;
             height: 20px;
             font-size: 10px;
-            bottom: -28px;
+            bottom: -25px;
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        .search-bar input {
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+        
+        .order-summary {
+            padding: 0.75rem;
         }
     }
+
+    @media (max-width: 480px) {
+        .premium-text {
+            font-size: 1.3rem;
+            letter-spacing: -1px;
+        }
+
+        .service-icon.spotify {
+            left: -20px;
+        }
+
+        .service-icon.netflix {
+            right: -15px;
+        }
+
+        .filter-btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .current-price {
+            font-size: 1.2rem;
+        }
+        
+        .hero-banner-image {
+            max-height: 180px;
+            min-height: 100px;
+        }
+        
+        .hero-content {
+            padding: 1rem;
+        }
+        
+        .section-header {
+            padding: 1.5rem 1rem 0.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+        }
+    }
+
+    /* Utility Classes */
+    .hidden {
+        display: none !important;
+    }
 </style>
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
+
+<!-- Mobile Navigation Overlay -->
+<div class="mobile-nav-overlay" onclick="toggleMobileMenu()"></div>
 
 <!-- Navigation -->
 <nav>
     <div class="nav-container">
-        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
             <i class="fas fa-bars"></i>
         </button>
         
@@ -972,12 +1195,11 @@
             <div class="sparkle sparkle-3"></div>
         </div>
         
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="#support">Support</a></li>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
+            <li><a href="#products" onclick="closeMobileMenu()">Products</a></li>
+            <li><a href="#support" onclick="closeMobileMenu()">Support</a></li>
         </ul>
-        <div style="width: 40px;"></div>
     </div>
 </nav>
 
@@ -989,7 +1211,7 @@
         <p>Discover Premium apps, Great Prices, Full Function with Best Service.</p>
         
         <div class="social-links">
-            <a href="https://t.me/nha_cam" target="_blank" class="social-link">
+            <a href="https://t.me/nha_cam" target="_blank" class="social-link" rel="noopener noreferrer">
                 <i class="fab fa-telegram"></i>
                 @fcpremium
             </a>
@@ -997,7 +1219,7 @@
 
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search for products..." id="searchInput">
+            <input type="text" placeholder="Search for products..." id="searchInput" autocomplete="off">
         </div>
     </div>
 </section>
@@ -1008,6 +1230,7 @@
     <button class="filter-btn" data-filter="subscription">Subscription</button>
     <button class="filter-btn" data-filter="ai">AI</button>
     <button class="filter-btn" data-filter="design">Design</button>
+    <button class="filter-btn" data-filter="vpn">VPN</button>
 </div>
 
 <!-- Hot Products Section -->
@@ -1023,7 +1246,7 @@
         <!-- CapCut -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg" alt="Capcut" class="product-image">
+            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg" alt="Capcut" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / 1 Month</div>
                 <h3 class="product-title">CapCut Pro</h3>
@@ -1039,14 +1262,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="CapCut-Pro" data-price="$2.50">Buy Now</button>
+                <button class="buy-btn" data-product="CapCut Pro" data-price="$2.50" data-duration="1 Month" data-category="Design">Buy Now</button>
             </div>
         </div>
 
         <!-- Netflix -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg" alt="Netflix" class="product-image">
+            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg" alt="Netflix" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 1 Month</div>
                 <h3 class="product-title">Netflix Premium</h3>
@@ -1062,14 +1285,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Netflix-Premium" data-price="$3.50">Buy Now</button>
+                <button class="buy-btn" data-product="Netflix Premium" data-price="$3.50" data-duration="1 Month" data-category="Subscription">Buy Now</button>
             </div>
         </div>
 
         <!-- YouTube -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg" alt="YouTube" class="product-image">
+            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg" alt="YouTube" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 1 Month</div>
                 <h3 class="product-title">YouTube Premium</h3>
@@ -1085,14 +1308,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="YouTube-Premium" data-price="$2.50">Buy Now</button>
+                <button class="buy-btn" data-product="YouTube Premium" data-price="$2.50" data-duration="1 Month" data-category="Subscription">Buy Now</button>
             </div>
         </div>
 
         <!-- Alight Motion -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/N6J3XKPR/alight.jpg" alt="Alight Motion" class="product-image">
+            <img src="https://i.ibb.co/N6J3XKPR/alight.jpg" alt="Alight Motion" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / 1 Year</div>
                 <h3 class="product-title">Alight Motion</h3>
@@ -1108,14 +1331,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Alight-Motion-Premium" data-price="$3.75">Buy Now</button>
+                <button class="buy-btn" data-product="Alight Motion" data-price="$3.75" data-duration="1 Year" data-category="Design">Buy Now</button>
             </div>
         </div>
 
         <!-- Canva -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/20J2GRgD/canva.jpg" alt="Canva" class="product-image">
+            <img src="https://i.ibb.co/20J2GRgD/canva.jpg" alt="Canva" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / Life-time</div>
                 <h3 class="product-title">Canva Pro</h3>
@@ -1131,14 +1354,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Canva-Pro" data-price="$3.50">Buy Now</button>
+                <button class="buy-btn" data-product="Canva Pro" data-price="$3.50" data-duration="Life-time" data-category="Design">Buy Now</button>
             </div>
         </div>
 
         <!-- PicsArt -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Pz9RF14d/picsart.jpg" alt="PicsArt" class="product-image">
+            <img src="https://i.ibb.co/Pz9RF14d/picsart.jpg" alt="PicsArt" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / 1 Month</div>
                 <h3 class="product-title">PicsArt Gold</h3>
@@ -1154,14 +1377,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="PicsArt-Gold" data-price="$2.00">Buy Now</button>
+                <button class="buy-btn" data-product="PicsArt Gold" data-price="$2.00" data-duration="1 Month" data-category="Design">Buy Now</button>
             </div>
         </div>
 
         <!-- Spotify -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/21SQdLHx/spotify.jpg" alt="Spotify" class="product-image">
+            <img src="https://i.ibb.co/21SQdLHx/spotify.jpg" alt="Spotify" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 3 Months</div>
                 <h3 class="product-title">Spotify Premium</h3>
@@ -1177,14 +1400,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Spotify-Premium" data-price="$4.50">Buy Now</button>
+                <button class="buy-btn" data-product="Spotify Premium" data-price="$4.50" data-duration="3 Months" data-category="Subscription">Buy Now</button>
             </div>
         </div>
 
-        <!-- Discord Nitro (Moved from Best Seller to here to avoid duplicate) -->
+        <!-- Discord Nitro -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg" alt="Discord Nitro" class="product-image">
+            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg" alt="Discord Nitro" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 3 Months</div>
                 <h3 class="product-title">Discord Nitro</h3>
@@ -1200,14 +1423,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Discord-Nitro" data-price="$4.75">Buy Now</button>
+                <button class="buy-btn" data-product="Discord Nitro" data-price="$4.75" data-duration="3 Months" data-category="Subscription">Buy Now</button>
             </div>
         </div>
         
         <!-- Gemini -->
         <div class="product-card" data-category="ai">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/xtvmpPNt/gemini.jpg" alt="Gemini" class="product-image">
+            <img src="https://i.ibb.co/xtvmpPNt/gemini.jpg" alt="Gemini" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">AI / 1 Year</div>
                 <h3 class="product-title">Gemini Advanced</h3>
@@ -1223,14 +1446,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Gemini-Advanced" data-price="$9.50">Buy Now</button>
+                <button class="buy-btn" data-product="Gemini Advanced" data-price="$9.50" data-duration="1 Year" data-category="AI">Buy Now</button>
             </div>
         </div>
 
         <!-- Grok AI -->
         <div class="product-card" data-category="ai">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/WWqQjfC4/grok.jpg" alt="Grok AI" class="product-image">
+            <img src="https://i.ibb.co/WWqQjfC4/grok.jpg" alt="Grok AI" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">AI / 1 Week</div>
                 <h3 class="product-title">Grok AI Premium</h3>
@@ -1246,14 +1469,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Grok-AI-Premium" data-price="$1.75">Buy Now</button>
+                <button class="buy-btn" data-product="Grok AI Premium" data-price="$1.75" data-duration="1 Week" data-category="AI">Buy Now</button>
             </div>
         </div>
 
-        <!-- ChatGPT (Moved inside container) -->
+        <!-- ChatGPT -->
         <div class="product-card" data-category="ai">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/xKZ0hf7P/chatgpt.jpg" alt="ChatGPT" class="product-image">
+            <img src="https://i.ibb.co/xKZ0hf7P/chatgpt.jpg" alt="ChatGPT" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">AI / 1 Year</div>
                 <h3 class="product-title">ChatGPT Plus</h3>
@@ -1269,14 +1492,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="ChatGPT-Plus" data-price="$5.50">Buy Now</button>
+                <button class="buy-btn" data-product="ChatGPT Plus" data-price="$5.50" data-duration="1 Year" data-category="AI">Buy Now</button>
             </div>
         </div>
 
-        <!-- Wink (Moved inside container) -->
+        <!-- Wink -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/67RWW7wN/wink.jpg" alt="Wink" class="product-image">
+            <img src="https://i.ibb.co/67RWW7wN/wink.jpg" alt="Wink" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / 1 Week</div>
                 <h3 class="product-title">Wink Pro</h3>
@@ -1292,14 +1515,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Wink-Pro" data-price="$2.50">Buy Now</button>
+                <button class="buy-btn" data-product="Wink Pro" data-price="$2.50" data-duration="1 Week" data-category="Design">Buy Now</button>
             </div>
         </div>
 
-        <!-- Surfshark (Moved inside container) -->
+        <!-- Surfshark -->
         <div class="product-card" data-category="vpn">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/21JHNBCp/surfshark.jpg" alt="Surfshark" class="product-image">
+            <img src="https://i.ibb.co/21JHNBCp/surfshark.jpg" alt="Surfshark" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">VPN / 3 Months</div>
                 <h3 class="product-title">Surfshark VPN</h3>
@@ -1315,14 +1538,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Surfshark-VPN" data-price="$4.50">Buy Now</button>
+                <button class="buy-btn" data-product="Surfshark VPN" data-price="$4.50" data-duration="3 Months" data-category="VPN">Buy Now</button>
             </div>
         </div>
 
-        <!-- ExpressVPN (Moved inside container) -->
+        <!-- ExpressVPN -->
         <div class="product-card" data-category="vpn">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Q7WpKyc1/express-VPN.jpg" alt="ExpressVPN" class="product-image">
+            <img src="https://i.ibb.co/Q7WpKyc1/express-VPN.jpg" alt="ExpressVPN" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">VPN / 1 Month</div>
                 <h3 class="product-title">ExpressVPN</h3>
@@ -1338,7 +1561,7 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="ExpressVPN" data-price="$2.75">Buy Now</button>
+                <button class="buy-btn" data-product="ExpressVPN" data-price="$2.75" data-duration="1 Month" data-category="VPN">Buy Now</button>
             </div>
         </div>
     </div>
@@ -1357,7 +1580,7 @@
         <!-- CapCut (Featured in Best Seller) -->
         <div class="product-card" data-category="design">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg  " alt="Capcut" class="product-image">
+            <img src="https://i.ibb.co/Nd5H96Pq/capcut.jpg" alt="Capcut" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Design / 1 Month</div>
                 <h3 class="product-title">CapCut Pro</h3>
@@ -1373,14 +1596,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="CapCut-Pro" data-price="$2.50">Buy Now</button>
+                <button class="buy-btn" data-product="CapCut Pro" data-price="$2.50" data-duration="1 Month" data-category="Design">Buy Now</button>
             </div>
         </div>
 
         <!-- YouTube (Featured in Best Seller) -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg  " alt="YouTube" class="product-image">
+            <img src="https://i.ibb.co/Lhc6hmxm/youtube.jpg" alt="YouTube" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 1 Month</div>
                 <h3 class="product-title">YouTube Premium</h3>
@@ -1396,14 +1619,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="YouTube-Premium" data-price="$2.50">Buy Now</button>
+                <button class="buy-btn" data-product="YouTube Premium" data-price="$2.50" data-duration="1 Month" data-category="Subscription">Buy Now</button>
             </div>
         </div>
 
         <!-- Netflix (Featured in Best Seller) -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg  " alt="Netflix" class="product-image">
+            <img src="https://i.ibb.co/F4hXBZpd/netflix.jpg" alt="Netflix" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 1 Month</div>
                 <h3 class="product-title">Netflix Premium</h3>
@@ -1419,14 +1642,14 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Netflix-Premium" data-price="$3.50">Buy Now</button>
+                <button class="buy-btn" data-product="Netflix Premium" data-price="$3.50" data-duration="1 Month" data-category="Subscription">Buy Now</button>
             </div>
         </div>
 
         <!-- Discord Nitro -->
         <div class="product-card" data-category="subscription">
             <span class="hot-badge"><i class="fas fa-fire"></i> HOT</span>
-            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg  " alt="Discord Nitro" class="product-image">
+            <img src="https://i.ibb.co/C3Jw7Nn7/nitro.jpg" alt="Discord Nitro" class="product-image" loading="lazy">
             <div class="product-content">
                 <div class="product-category">Subscription / 3 Months</div>
                 <h3 class="product-title">Discord Nitro</h3>
@@ -1442,7 +1665,7 @@
                     </div>
                 </div>
                 
-                <button class="buy-btn" data-product="Discord-Nitro" data-price="$4.75">Buy Now</button>
+                <button class="buy-btn" data-product="Discord Nitro" data-price="$4.75" data-duration="3 Months" data-category="Subscription">Buy Now</button>
             </div>
         </div>
     </div>
@@ -1455,10 +1678,10 @@
             <h3>About FC Premium</h3>
             <p>Your trusted source for digital subscriptions. We provide instant delivery of premium accounts and keys at affordable prices.</p>
             <div class="social-icons">
-                <a href="https://discord.com/channels/@07s.xyz.com  " target="_blank" class="discord" title="Discord">
+                <a href="https://discord.com/channels/@07s.xyz.com" target="_blank" class="discord" title="Discord" rel="noopener noreferrer">
                     <i class="fab fa-discord"></i>
                 </a>
-                <a href="https://t.me/nha_cam" target="_blank" class="telegram" title="Telegram">
+                <a href="https://t.me/nha_cam" target="_blank" class="telegram" title="Telegram" rel="noopener noreferrer">
                     <i class="fab fa-telegram-plane"></i>
                 </a>
             </div>
@@ -1475,8 +1698,8 @@
         <div class="footer-section support-section">
             <h3>Support</h3>
             <ul>
-                <li><a href="https://t.me/nha_cam" target="_blank">Contact Us</a></li>
-                <li><a href="mailto:panhacam3@gmail.com">panhacam3@gmail.com.com</a></li>
+                <li><a href="https://t.me/nha_cam" target="_blank" rel="noopener noreferrer">Contact Us</a></li>
+                <li><a href="mailto:panhacam3@gmail.com">panhacam3@gmail.com</a></li>
             </ul>
         </div>
         
@@ -1497,129 +1720,340 @@
 <!-- Purchase Modal -->
 <div class="modal" id="purchaseModal">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal()">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
             <i class="fas fa-times"></i>
         </button>
         <i class="fas fa-shopping-cart" style="font-size: 3rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;"></i>
         <h3>Proceed to Checkout</h3>
-        <p id="modalProductInfo">You are about to purchase this item.</p>
-        <a href="https://t.me/nha_cam" target="_blank" class="contact-btn" id="contactBtn">
-            <i class="fab fa-telegram"></i> Contact Us
-        </a>
+        
+        <!-- Order Summary -->
+        <div class="order-summary" id="orderSummary">
+            <h4>Order Summary</h4>
+            <div class="order-item">
+                <span class="order-item-name" id="orderProductName">Product Name</span>
+                <span class="order-item-price" id="orderProductPrice">$0.00</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;" id="orderProductDetails">
+                Category • Duration
+            </div>
+            <div class="order-total">
+                <span>Total</span>
+                <span id="orderTotalPrice">$0.00</span>
+            </div>
+        </div>
+        
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Click below to send your order and continue to Telegram.
+        </p>
+        
+        <button class="contact-btn" id="contactBtn" style="border: none; width: 100%; justify-content: center;">
+            <i class="fab fa-telegram"></i> Send Order & Continue
+        </button>
     </div>
 </div>
 
 <script>
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-        const navLinks = document.querySelector('.nav-links');
-        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-    }
+// ==========================================
+// TELEGRAM BOT CONFIGURATION - UPDATE THESE 3 VALUES BELOW
+// ==========================================
 
-    // Buy button functionality
-    document.querySelectorAll('.buy-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const originalText = this.innerHTML;
-            const product = this.getAttribute('data-product');
-            const price = this.getAttribute('data-price');
-            
-            // Show processing state
-            this.innerHTML = '<span class="loading"></span> Processing...';
-            this.disabled = true;
-            
-            // Simulate processing then show modal
-            setTimeout(() => {
-                // Reset button
-                this.innerHTML = originalText;
-                this.disabled = false;
-                
-                // Show purchase modal
-                showModal(product, price);
-            }, 1500);
+// 1. BOT_TOKEN: From @BotFather (looks like: 123456789:ABCdefGHIjklMNOpqrSTUvwxyz123456789)
+const BOT_TOKEN = '8263302963:AAGqqq5NSaSSTN-FpwnU_YCsynMVvSIigqEE';
+
+// 2. CHAT_ID: From @userinfobot (looks like: 123456789)
+const CHAT_ID = '7057746754';
+
+// 3. TELEGRAM_USERNAME: Your bot username without @ (example: fcpremium_orders_bot)
+const TELEGRAM_USERNAME = 'nha_cam';
+
+// ==========================================
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
+// ==========================================
+
+// Store current order details
+let currentOrder = {
+    product: '',
+    price: '',
+    duration: '',
+    category: ''
+};
+
+// Generate Telegram message text
+function generateTelegramMessage() {
+    const date = new Date().toLocaleString();
+    const message = `🛒 NEW ORDER FROM FC PREMIUM STORE
+
+📦 Product: ${currentOrder.product}
+🏷️ Category: ${currentOrder.category}
+⏱️ Duration: ${currentOrder.duration}
+💰 Price: ${currentOrder.price}
+
+🕐 Order Time: ${date}
+
+💳 Payment Method: (Please specify KHQR or ABA)
+
+Hello! I want to purchase this item. Please send me payment details.`;
+    
+    return message;
+}
+
+// Send message to Telegram Bot API
+async function sendOrderToTelegram() {
+    const message = generateTelegramMessage();
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
         });
-    });
-
-    // Modal functions
-    function showModal(product, price) {
-        const modal = document.getElementById('purchaseModal');
-        const info = document.getElementById('modalProductInfo');
-        info.innerHTML = `You selected <strong style="color: var(--accent-color)">${product}</strong> for <strong style="color: var(--success-color)">${price}</strong>.<br><br>Contact us on Telegram to complete your purchase securely!`;
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('purchaseModal').style.display = 'none';
-    }
-
-    // Close modal on outside click
-    window.onclick = function(event) {
-        const modal = document.getElementById('purchaseModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            console.log('Order sent to Telegram successfully!');
+            return true;
+        } else {
+            console.error('Failed to send to Telegram:', data);
+            return false;
         }
+    } catch (error) {
+        console.error('Error sending to Telegram:', error);
+        return false;
     }
+}
 
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const overlay = document.querySelector('.mobile-nav-overlay');
+    const menuBtn = document.querySelector('.mobile-menu-toggle');
+    const icon = menuBtn.querySelector('i');
+    
+    navLinks.classList.toggle('active');
+    overlay.classList.toggle('active');
+    
+    if (navLinks.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+        document.body.style.overflow = 'hidden';
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const overlay = document.querySelector('.mobile-nav-overlay');
+    const menuBtn = document.querySelector('.mobile-menu-toggle');
+    const icon = menuBtn.querySelector('i');
+    
+    navLinks.classList.remove('active');
+    overlay.classList.remove('active');
+    icon.classList.remove('fa-times');
+    icon.classList.add('fa-bars');
+    document.body.style.overflow = '';
+}
+
+// Close mobile menu on window resize if open
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        closeMobileMenu();
+    }
+});
+
+// Buy button functionality
+document.querySelectorAll('.buy-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const originalText = this.innerHTML;
+        const product = this.getAttribute('data-product');
+        const price = this.getAttribute('data-price');
+        const duration = this.getAttribute('data-duration');
+        const category = this.getAttribute('data-category');
+        
+        // Store order details
+        currentOrder = {
+            product: product,
+            price: price,
+            duration: duration,
+            category: category
+        };
+        
+        // Show processing state
+        this.innerHTML = '<span class="loading"></span> Processing...';
+        this.disabled = true;
+        
+        // Simulate processing then show modal
+        setTimeout(() => {
+            // Reset button
+            this.innerHTML = originalText;
+            this.disabled = false;
             
-            const filter = this.getAttribute('data-filter');
-            const cards = document.querySelectorAll('.product-card');
-            
-            cards.forEach(card => {
-                if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                    card.style.display = 'flex';
-                    card.style.animation = 'fadeIn 0.4s ease';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+            // Show purchase modal
+            showModal(product, price, duration, category);
+        }, 1500);
     });
+});
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
+// Modal functions
+function showModal(product, price, duration, category) {
+    const modal = document.getElementById('purchaseModal');
+    
+    // Update order summary in modal
+    document.getElementById('orderProductName').textContent = product;
+    document.getElementById('orderProductPrice').textContent = price;
+    document.getElementById('orderProductDetails').textContent = `${category} • ${duration}`;
+    document.getElementById('orderTotalPrice').textContent = price;
+    
+    // Update contact button to send order and open Telegram
+    const contactBtn = document.getElementById('contactBtn');
+    contactBtn.onclick = async function(e) {
+        e.preventDefault();
+        
+        // Change button to sending state
+        const originalBtnText = this.innerHTML;
+        this.innerHTML = '<span class="loading"></span> Sending Order...';
+        this.style.pointerEvents = 'none';
+        
+        // Send order to Telegram
+        const sent = await sendOrderToTelegram();
+        
+        if (sent) {
+            // Open Telegram with pre-filled message as backup
+            const telegramMessage = encodeURIComponent(generateTelegramMessage());
+            const telegramLink = `https://t.me/${TELEGRAM_USERNAME}?text=${telegramMessage}`;
+            window.open(telegramLink, '_blank');
+            
+            // Close modal
+            closeModal();
+            
+            // Show success message
+            alert('✅ Order sent successfully! Please complete payment in Telegram.');
+        } else {
+            // If API fails, just open Telegram
+            const telegramMessage = encodeURIComponent(generateTelegramMessage());
+            const telegramLink = `https://t.me/${TELEGRAM_USERNAME}?text=${telegramMessage}`;
+            window.open(telegramLink, '_blank');
+            
+            this.innerHTML = originalBtnText;
+            this.style.pointerEvents = 'auto';
+        }
+    };
+    
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('purchaseModal').style.display = 'none';
+    document.body.style.overflow = '';
+    
+    // Reset button
+    const contactBtn = document.getElementById('contactBtn');
+    contactBtn.innerHTML = '<i class="fab fa-telegram"></i> Send Order & Continue';
+    contactBtn.style.pointerEvents = 'auto';
+}
+
+// Close modal on outside click
+window.onclick = function(event) {
+    const modal = document.getElementById('purchaseModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+        closeMobileMenu();
+    }
+});
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.getAttribute('data-filter');
         const cards = document.querySelectorAll('.product-card');
         
         cards.forEach(card => {
-            const title = card.querySelector('.product-title').textContent.toLowerCase();
-            const category = card.querySelector('.product-category').textContent.toLowerCase();
-            
-            if (title.includes(searchTerm) || category.includes(searchTerm)) {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
                 card.style.display = 'flex';
+                card.style.animation = 'fadeIn 0.4s ease';
             } else {
                 card.style.display = 'none';
             }
         });
     });
+});
 
-    // Add fade in animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.product-card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.product-title').textContent.toLowerCase();
+        const category = card.querySelector('.product-category').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || category.includes(searchTerm)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
         }
-    `;
-    document.head.appendChild(style);
-
-    // Smooth scroll for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
     });
+});
+
+// Add fade in animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+`;
+document.head.appendChild(style);
+
+// Smooth scroll for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            const headerOffset = 80;
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Prevent zoom on double tap for iOS
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
 </script>
 
 </body>
