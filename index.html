@@ -618,11 +618,17 @@
         transition: all 0.3s;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 
     .buy-btn:hover {
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+    }
+
+    .buy-btn:active {
+        transform: scale(0.98);
     }
 
     .buy-btn:disabled {
@@ -792,6 +798,7 @@
         -webkit-backdrop-filter: blur(4px);
         padding: 1rem;
         box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
     }
 
     .modal-content {
@@ -800,6 +807,8 @@
         padding: 2rem;
         max-width: 400px;
         width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
         text-align: center;
         position: relative;
         animation: modalSlideIn 0.3s ease;
@@ -833,6 +842,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 50%;
+        z-index: 10;
     }
 
     .modal-close:hover {
@@ -865,11 +875,19 @@
         align-items: center;
         gap: 0.5rem;
         transition: all 0.3s;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
     }
 
     .contact-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+    }
+
+    .contact-btn:active {
+        transform: scale(0.98);
     }
 
     /* Order Summary in Modal */
@@ -904,11 +922,15 @@
     .order-item-name {
         font-weight: 600;
         color: var(--text-primary);
+        word-break: break-word;
+        flex: 1;
+        padding-right: 0.5rem;
     }
 
     .order-item-price {
         font-weight: 700;
         color: var(--success-color);
+        white-space: nowrap;
     }
 
     .order-total {
@@ -920,6 +942,40 @@
         border-top: 2px solid var(--accent-color);
         font-weight: 800;
         font-size: 1.1rem;
+    }
+
+    /* Status Message */
+    .status-message {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--success-color);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 3000;
+        display: none;
+        animation: slideUp 0.3s ease;
+        max-width: 90%;
+        text-align: center;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    }
+
+    .status-message.error {
+        background: var(--warning-color);
     }
 
     /* Mobile Navigation Overlay */
@@ -1102,15 +1158,21 @@
 
         .modal-content {
             padding: 1.5rem;
-            margin: 1rem;
+            margin: 0.5rem;
+            max-height: 85vh;
         }
 
         .search-bar input {
-            font-size: 16px; /* Prevents zoom on iOS */
+            font-size: 16px;
         }
         
         .order-summary {
             padding: 0.75rem;
+        }
+
+        .status-message {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
         }
     }
 
@@ -1153,6 +1215,10 @@
         .section-title {
             font-size: 1.2rem;
         }
+
+        .modal-content {
+            padding: 1.25rem;
+        }
     }
 
     /* Utility Classes */
@@ -1160,8 +1226,12 @@
         display: none !important;
     }
 </style>
+<base target="_blank">
 </head>
 <body>
+
+<!-- Status Message Toast -->
+<div class="status-message" id="statusMessage"></div>
 
 <!-- Mobile Navigation Overlay -->
 <div class="mobile-nav-overlay" onclick="toggleMobileMenu()"></div>
@@ -1778,6 +1848,23 @@ let currentOrder = {
     category: ''
 };
 
+// Check if device is mobile
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+
+// Show status message
+function showStatus(message, isError = false) {
+    const statusEl = document.getElementById('statusMessage');
+    statusEl.textContent = message;
+    statusEl.className = 'status-message' + (isError ? ' error' : '');
+    statusEl.style.display = 'block';
+    
+    setTimeout(() => {
+        statusEl.style.display = 'none';
+    }, 3000);
+}
+
 // Generate Telegram message text
 function generateTelegramMessage() {
     const date = new Date().toLocaleString();
@@ -1797,12 +1884,48 @@ Hello! I want to purchase this item. Please send me payment details.`;
     return message;
 }
 
-// Send message to Telegram Bot API
+// Open Telegram with message (works on both mobile and desktop)
+function openTelegram(message) {
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Try multiple URL schemes for better mobile compatibility
+    const telegramUrls = [
+        `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`,
+        `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMessage}`,
+        `https://telegram.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`
+    ];
+    
+    // For mobile, try to open app first, then fallback to web
+    if (isMobile()) {
+        // Create a hidden iframe to try opening the app
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = telegramUrls[1]; // tg:// protocol
+        document.body.appendChild(iframe);
+        
+        // Fallback to web version after short delay
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+            window.location.href = telegramUrls[0];
+        }, 500);
+    } else {
+        // Desktop: just open in new tab
+        window.open(telegramUrls[0], '_blank');
+    }
+}
+
+// Send message to Telegram Bot API with better error handling
 async function sendOrderToTelegram() {
     const message = generateTelegramMessage();
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    
+    // Remove space from token if present
+    const cleanToken = BOT_TOKEN.replace(/\s/g, '');
+    const url = `https://api.telegram.org/bot${cleanToken}/sendMessage`;
     
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -1812,21 +1935,27 @@ async function sendOrderToTelegram() {
                 chat_id: CHAT_ID,
                 text: message,
                 parse_mode: 'HTML'
-            })
+            }),
+            signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         const data = await response.json();
         
         if (data.ok) {
             console.log('Order sent to Telegram successfully!');
-            return true;
+            return { success: true, error: null };
         } else {
             console.error('Failed to send to Telegram:', data);
-            return false;
+            return { success: false, error: data.description || 'Unknown error' };
         }
     } catch (error) {
         console.error('Error sending to Telegram:', error);
-        return false;
+        if (error.name === 'AbortError') {
+            return { success: false, error: 'Request timeout' };
+        }
+        return { success: false, error: error.message };
     }
 }
 
@@ -1871,38 +2000,50 @@ window.addEventListener('resize', function() {
     }
 });
 
-// Buy button functionality
-document.querySelectorAll('.buy-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const originalText = this.innerHTML;
-        const product = this.getAttribute('data-product');
-        const price = this.getAttribute('data-price');
-        const duration = this.getAttribute('data-duration');
-        const category = this.getAttribute('data-category');
-        
-        // Store order details
-        currentOrder = {
-            product: product,
-            price: price,
-            duration: duration,
-            category: category
+// Buy button functionality with touch support
+function initBuyButtons() {
+    document.querySelectorAll('.buy-btn').forEach(btn => {
+        // Handle both click and touch
+        const handleBuy = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const originalText = this.innerHTML;
+            const product = this.getAttribute('data-product');
+            const price = this.getAttribute('data-price');
+            const duration = this.getAttribute('data-duration');
+            const category = this.getAttribute('data-category');
+            
+            // Store order details
+            currentOrder = {
+                product: product,
+                price: price,
+                duration: duration,
+                category: category
+            };
+            
+            // Show processing state
+            this.innerHTML = '<span class="loading"></span> Processing...';
+            this.disabled = true;
+            
+            // Simulate processing then show modal
+            setTimeout(() => {
+                // Reset button
+                this.innerHTML = originalText;
+                this.disabled = false;
+                
+                // Show purchase modal
+                showModal(product, price, duration, category);
+            }, 1500);
         };
         
-        // Show processing state
-        this.innerHTML = '<span class="loading"></span> Processing...';
-        this.disabled = true;
-        
-        // Simulate processing then show modal
-        setTimeout(() => {
-            // Reset button
-            this.innerHTML = originalText;
-            this.disabled = false;
-            
-            // Show purchase modal
-            showModal(product, price, duration, category);
-        }, 1500);
+        btn.addEventListener('click', handleBuy);
+        btn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            handleBuy.call(this, e);
+        });
     });
-});
+}
 
 // Modal functions
 function showModal(product, price, duration, category) {
@@ -1914,43 +2055,62 @@ function showModal(product, price, duration, category) {
     document.getElementById('orderProductDetails').textContent = `${category} • ${duration}`;
     document.getElementById('orderTotalPrice').textContent = price;
     
-    // Update contact button to send order and open Telegram
+    // Update contact button
     const contactBtn = document.getElementById('contactBtn');
-    contactBtn.onclick = async function(e) {
+    
+    // Remove old event listeners by cloning
+    const newBtn = contactBtn.cloneNode(true);
+    contactBtn.parentNode.replaceChild(newBtn, contactBtn);
+    
+    // Add new click handler
+    newBtn.addEventListener('click', handleSendOrder);
+    newBtn.addEventListener('touchend', function(e) {
         e.preventDefault();
-        
-        // Change button to sending state
-        const originalBtnText = this.innerHTML;
-        this.innerHTML = '<span class="loading"></span> Sending Order...';
-        this.style.pointerEvents = 'none';
-        
-        // Send order to Telegram
-        const sent = await sendOrderToTelegram();
-        
-        if (sent) {
-            // Open Telegram with pre-filled message as backup
-            const telegramMessage = encodeURIComponent(generateTelegramMessage());
-            const telegramLink = `https://t.me/${TELEGRAM_USERNAME}?text=${telegramMessage}`;
-            window.open(telegramLink, '_blank');
-            
-            // Close modal
-            closeModal();
-            
-            // Show success message
-            alert('✅ Order sent successfully! Please complete payment in Telegram.');
-        } else {
-            // If API fails, just open Telegram
-            const telegramMessage = encodeURIComponent(generateTelegramMessage());
-            const telegramLink = `https://t.me/${TELEGRAM_USERNAME}?text=${telegramMessage}`;
-            window.open(telegramLink, '_blank');
-            
-            this.innerHTML = originalBtnText;
-            this.style.pointerEvents = 'auto';
-        }
-    };
+        handleSendOrder(e);
+    });
     
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+}
+
+// Handle send order button click
+async function handleSendOrder(e) {
+    if (e) e.preventDefault();
+    
+    const btn = document.getElementById('contactBtn');
+    const originalBtnText = btn.innerHTML;
+    
+    // Change button to sending state
+    btn.innerHTML = '<span class="loading"></span> Sending...';
+    btn.style.pointerEvents = 'none';
+    
+    // Show sending status
+    showStatus('Sending order...');
+    
+    // Try to send to Telegram API
+    const result = await sendOrderToTelegram();
+    
+    // Open Telegram regardless of API result (backup method)
+    const message = generateTelegramMessage();
+    
+    if (result.success) {
+        showStatus('✅ Order sent! Opening Telegram...');
+    } else {
+        console.log('API failed, using direct link:', result.error);
+        showStatus('Opening Telegram...', false);
+    }
+    
+    // Small delay to show status message
+    setTimeout(() => {
+        openTelegram(message);
+        
+        // Close modal after opening Telegram
+        setTimeout(() => {
+            closeModal();
+            btn.innerHTML = originalBtnText;
+            btn.style.pointerEvents = 'auto';
+        }, 1000);
+    }, 500);
 }
 
 function closeModal() {
@@ -1959,8 +2119,10 @@ function closeModal() {
     
     // Reset button
     const contactBtn = document.getElementById('contactBtn');
-    contactBtn.innerHTML = '<i class="fab fa-telegram"></i> Send Order & Continue';
-    contactBtn.style.pointerEvents = 'auto';
+    if (contactBtn) {
+        contactBtn.innerHTML = '<i class="fab fa-telegram"></i> Send Order & Continue';
+        contactBtn.style.pointerEvents = 'auto';
+    }
 }
 
 // Close modal on outside click
@@ -2054,6 +2216,9 @@ document.addEventListener('touchend', function (event) {
     }
     lastTouchEnd = now;
 }, false);
+
+// Initialize buy buttons on load
+document.addEventListener('DOMContentLoaded', initBuyButtons);
 </script>
 
 </body>
