@@ -1103,6 +1103,15 @@
         box-shadow: 0 8px 25px rgba(0, 183, 37, 0.4);
     }
 
+    .contact-btn.telegram {
+        background: linear-gradient(135deg, #0088cc 0%, #00a8e6 100%);
+        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+    }
+
+    .contact-btn.telegram:hover {
+        box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+    }
+
     /* Instructions Box */
     .instructions-box {
         background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
@@ -1858,8 +1867,20 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Mobile-specific Telegram button enhancements */
+    @media (max-width: 768px) {
+        .contact-btn.telegram {
+            font-size: 1.1rem;
+            padding: 1.1rem 2rem;
+            min-height: 56px;
+        }
+        
+        .contact-btn.telegram i {
+            font-size: 1.3rem;
+        }
+    }
 </style>
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -2637,6 +2658,20 @@ function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 }
 
+// Check if running in Telegram's in-app browser
+function isTelegramBrowser() {
+    return navigator.userAgent.includes('Telegram') || 
+           navigator.userAgent.includes('TelegramBot') ||
+           window.location.href.includes('tg://');
+}
+
+// Check if running in Facebook/Instagram in-app browser
+function isFacebookBrowser() {
+    return navigator.userAgent.includes('FBAN') || 
+           navigator.userAgent.includes('FBAV') ||
+           navigator.userAgent.includes('Instagram');
+}
+
 // Show status message
 function showStatus(message, isError = false, isInfo = false) {
     const statusEl = document.getElementById('statusMessage');
@@ -2682,7 +2717,7 @@ function generateTelegramMessage() {
     return message;
 }
 
-// Send to Admin (Manual Telegram Send Only)
+// FIXED: Send to Admin - Mobile-First Approach
 function sendToAdmin() {
     if (!uploadedImageBase64) {
         showStatus('Please upload a receipt image first', true);
@@ -2695,24 +2730,74 @@ function sendToAdmin() {
     // Store image in localStorage temporarily so user can access it
     try {
         localStorage.setItem('temp_receipt_' + currentOrder.id, uploadedImageBase64);
+        localStorage.setItem('temp_order_' + currentOrder.id, JSON.stringify(currentOrder));
     } catch (e) {
         console.log('Could not store image in localStorage');
     }
     
-    // Open Telegram based on device
-    if (isMobile()) {
-        // Try to open Telegram app
-        const tgUrl = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMessage}`;
-        window.location.href = tgUrl;
+    // Detect environment
+    const isMobileDevice = isMobile();
+    const isInTelegramBrowser = isTelegramBrowser();
+    const isInFacebookBrowser = isFacebookBrowser();
+    
+    console.log('Environment:', { isMobileDevice, isInTelegramBrowser, isInFacebookBrowser });
+    
+    // Build URLs
+    const webUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+    const tgAppUrl = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMessage}`;
+    
+    // Special handling for different environments
+    if (isInTelegramBrowser) {
+        // Already in Telegram - use web version to stay in same app
+        showStatus('Opening Telegram...', false, true);
+        window.open(webUrl, '_blank');
+    } 
+    else if (isInFacebookBrowser) {
+        // Facebook/Instagram in-app browser - must use web version
+        showStatus('Opening Telegram Web...', false, true);
+        window.open(webUrl, '_blank');
+    }
+    else if (isMobileDevice) {
+        // Mobile device - try app first, then fallback to web
         
-        // Fallback to web version
-        setTimeout(() => {
-            const webUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
-            window.open(webUrl, '_blank');
-        }, 1500);
-    } else {
-        // Desktop: Open web version
-        const webUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+        // For iOS Safari and Chrome Mobile
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            // iOS: Use universal link format which works better
+            const iosUniversalLink = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+            
+            // Try to open app using iframe method (more reliable on iOS)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = tgAppUrl;
+            document.body.appendChild(iframe);
+            
+            // Cleanup iframe
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 2000);
+            
+            // Also try location change as backup
+            window.location.href = tgAppUrl;
+            
+            // Fallback to web after delay
+            setTimeout(() => {
+                window.open(iosUniversalLink, '_blank');
+            }, 2500);
+        } 
+        else {
+            // Android: Try intent URL first, then fallback
+            // Standard approach for Android
+            window.location.href = tgAppUrl;
+            
+            // Fallback to web
+            setTimeout(() => {
+                window.open(webUrl, '_blank');
+            }, 2000);
+        }
+    } 
+    else {
+        // Desktop - open web version in new tab
+        showStatus('Opening Telegram Web...', false, true);
         window.open(webUrl, '_blank');
     }
     
@@ -2722,6 +2807,26 @@ function sendToAdmin() {
     setTimeout(() => {
         closeModal();
     }, 3000);
+}
+
+// Alternative: Copy to clipboard method for cases where app won't open
+function copyOrderToClipboard() {
+    const message = generateTelegramMessage();
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(message).then(() => {
+            showStatus('Order details copied! Paste in Telegram.', false, true);
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = message;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showStatus('Order details copied! Paste in Telegram.', false, true);
+        });
+    }
 }
 
 // Start payment timer
@@ -3054,9 +3159,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initBuyButtons();
     console.log('FC Premium Store initialized');
     console.log('KHQR Image URL:', KHQR_IMAGE_URL);
+    console.log('Is Mobile:', isMobile());
+    console.log('Is Telegram Browser:', isTelegramBrowser());
 });
 </script>
 
 </body>
 </html>
-
